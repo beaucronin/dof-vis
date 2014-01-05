@@ -1,0 +1,71 @@
+h1 {
+	font-family: sans-serif;
+}
+
+span {
+	font-family: sans-serif;
+}
+
+.in-focus-rect {
+	position: absolute;
+	background-color: steelblue;
+}
+
+.format-name {
+	position: absolute;
+}
+
+#vis-body {
+	position: absolute;
+	top: 200px;
+	left: 160px;
+	border-left-color: gray;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-right-color: gray;
+	border-right-width: 1px;
+	border-right-style: solid;
+}
+
+.length-label {
+	position: absolute;
+	left: 20px;
+	font-family: sans-serif;
+}
+
+#format-labels {
+	position: absolute;
+	top: 200px;
+	left: 20px;
+	width: 160px;
+}
+
+.format-name {
+	font-family: sans-serif;
+}
+
+.control-row {
+	width: 1000px;
+	margin-bottom: 10px;
+}
+
+#vis-controls {
+	width: 1000px;
+}
+
+.label {
+	width: 220px;
+	display: inline-block;
+}
+
+.control-label {
+	width: 140px;
+	min-width: 100px;
+	display: inline-block;
+}
+
+.control-slider {
+	width: 500px;
+	display: inline-block;
+	/*float: right;*/
+}
