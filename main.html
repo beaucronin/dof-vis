@@ -127,11 +127,11 @@
 	    
 	    $( "#distance-slider" ).slider({
 	      value: 300,
-	      min: 2,
+	      min: 10,
 	      max: 1000,
 	      slide: function( event, ui ) {
-	        $( "#distance" ).text( (ui.value / 100.0) + " m / " + (ui.value * .033 + '').substring(0,4) + " ft" );
-	        distance = ui.value / 100.0; // convert cm to m
+	        distance = maxDistance * (ui.value / 1000.0);
+	        $( "#distance" ).text( (distance + '').substring(0,4) + " m / " + (distance * 3.3 + '').substring(0,4) + " ft" );
 	        update();
 	      }
 	    });
@@ -139,13 +139,18 @@
 
       update = function() {
       	for (var i = 0; i < formats.length; i++) {
+      		var left = computeLeft(formats[i]);
+      		var width = computeWidth(formats[i]);
+	      	var pixelsPerMeter = visWidth / maxDistance;
+	      	var dof = width / pixelsPerMeter;
       		$( "#in-focus-"+formats[i].key )
-      			.css("left", computeLeft(formats[i]))
-      			.css("width", computeWidth(formats[i]))
+      			.css("left", left)
+      			.css("width", width)
 	      	var angle = lengthToAngle(focalLength, formats[3]);
   	    	var thisLength = angleToLength(angle, formats[i]) * 1000.;
-      		var x = (thisLength+'').substring(0,4) + "mm"
-      		$( "#length-"+formats[i].key ).text(x)
+      		var x = (thisLength+'').substring(0,4) + "mm";
+      		$( "#length-"+formats[i].key ).text(x);
+      		$( "#dof-"+formats[i].key ).text((dof+'').substring(0,5) + "m");
       	}
       }
 
@@ -166,6 +171,11 @@
       		.css("top", (j*36+8)+"px")
       		.css("width");
 
+      	$( "#readout-table" )
+      		.append("<div class='table-row'><span id='dof-"+format.key+"'></span></div>")
+      	// $( "#dof-"+format.key)
+      	// 	.css("top", (j*36+8)+"px")
+
       }
 
       computeWidth = function(format) {
@@ -175,7 +185,7 @@
       	H = hyperfocal(thisLength, fNumber, format.coc);
       	var near = dn(H, distance);
       	var far = df(H, distance);
-      	var pixelsPerMeter = visWidth / maxDistance
+      	var pixelsPerMeter = visWidth / maxDistance;
       	// console.log(format.name + " " + H + " " + near + " " + far)
       	return Math.round((far - near) * pixelsPerMeter)
       }
@@ -196,6 +206,9 @@
     			.css("width", visWidth+"px")
     		initFormat(i, formats[i])
     	}
+    	$( "#max-distance-select" ).change(function () {
+    		maxDistance = parseFloat($( "#max-distance-select option:selected")[0].value)
+    	});
 
   	});
 
@@ -223,8 +236,19 @@
 				<div id="distance-slider" class="control-slider"></div>
 			</div>	
 		</div>
+		<div id="secondary-controls" class="control-row">
+			<span for="max-distance-select" class="control-label">Maximum distance</span>
+			<select id="max-distance-select">
+				<option value="3">3 m</option>
+				<option selected="selected" value="10">10 m</option>
+				<option value="30">30 m</option>
+				<option value="100">100 m</option>
+				<option value="300">300 m</option>
+			</select>
+		</div>
 		<div id="format-labels"></div>
 		<div id="vis-body"></div>
+		<div id="readout-table"></div>
 	</div>
 </body>
 
